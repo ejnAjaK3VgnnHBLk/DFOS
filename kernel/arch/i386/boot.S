@@ -1,39 +1,39 @@
-# Multiboot header constants
-.set ALIGN, 1<<0
-.set MEMINFO, 1<<1
-.set FLAGS, ALIGN | MEMINFO
-.set MAGIC, 0x1BADB002
-.set CHECKSUM, -(MAGIC + FLAGS)
+# Declare constants for the multiboot header.
+.set ALIGN,    1<<0            
+.set MEMINFO,  1<<1             
+.set FLAGS,    ALIGN | MEMINFO  
+.set MAGIC,    0x1BADB002      
+.set CHECKSUM, -(MAGIC + FLAGS) 
 
-# Declare header as per multiboot standard
+# Declare a header as in the Multiboot Standard.
 .section .multiboot
 .align 4
 .long MAGIC
 .long FLAGS
 .long CHECKSUM
 
-# Make stack for initial thread
+# Reserve a stack for the initial thread.
 .section .bss
 .align 16
 stack_bottom:
-.skip 16384   # 16KiB
+.skip 16384 # 16 KiB
 stack_top:
 
-# Kernel entry point
+# The kernel entry point.
 .section .text
 .global _start
 .type _start, @function
 _start:
-    movl $stack_top, %esp
+	movl $stack_top, %esp
 
-    # Call global constructors
-    call _init
+	# Call the global constructors.
+	call _init
 
-    # Control now goes to main Kernel
-    call kernel_main
+	# Transfer control to the main kernel.
+	call kernel_main
 
-    # hang if kernel  retuns something on accident
-    cli
-1:  hlt
-    jmp 1b
+	# Hang if kernel_main unexpectedly returns.
+	cli
+1:	hlt
+	jmp 1b
 .size _start, . - _start

@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 . ./config.sh
 
 for PROJECT in $PROJECTS; do
-    (cd $PROJECT && $MAKE clean)
+  (cd $PROJECT && $MAKE clean)
 done
 
 rm -rf sysroot
 rm -rf isodir
-rm -rs dfos.iso
+rm -rf myos.iso
