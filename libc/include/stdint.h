@@ -21,5 +21,3 @@ typedef unsigned int uint32_t;
 #endif
 typedef unsigned long int uint64_t;
 #endif
-
-#endif
