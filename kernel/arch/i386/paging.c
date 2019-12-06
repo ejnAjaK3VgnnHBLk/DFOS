@@ -3,12 +3,12 @@
 void mapTables() {
     // Make page run
     page_dir_ptr_tab[0] = (uint64_t)&page_dir | 1;
-    page_dir[0] = (uint64_t)&p_tab | 3;
+    page_dir[0] = (uint64_t)&page_tab | 3;
 
     // Map first 2MiB
     unsigned int i, address = 0;
     for (i = 0; i<512; i++) {
-        page_tab[i] address | 3;
+        page_tab[i] = address | 3;
         address = address + 0x1000;
     }
 
