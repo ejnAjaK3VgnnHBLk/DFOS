@@ -1,5 +1,5 @@
-#ifndef _STDINT_H
-#define _STDINT_H
+#ifndef _REGINT_H
+#define _REGINT_H
 
 // signed
 

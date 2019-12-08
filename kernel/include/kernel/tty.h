@@ -1,11 +1,42 @@
 #ifndef _KERNEL_TTY_H
 #define _KERNEL_TTY_H
 
-#include <stddef.h>
+#include <regint.h>
 
-void terminal_initialize(void);
-void terminal_putchar(char c);
-void terminal_write(const char* data, size_t size);
-void terminal_writestring(const char* data);
+#define VGA_ADDRESS = (uint16_t*) 0xC03FF000
+#define BUFSIZE 2200
+
+
+int ascii_codes = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
+
+uint16* vga_buffer;
+
+#define NULL 0
+
+enum vga_color {
+    BLACK, 
+    BLUE,
+    GREEN,
+    CYAN,
+    RED,
+    MAGENTA,
+    BROWN,
+    GREY,
+    DARK_GREY, 
+    BRIGHT_BLUE,
+    BRIGHT_GREEN,
+    BRIGHT_CYAN,
+    BRIGHT_RED,
+    BRIGHT_MAGENTA,
+    YELLOW,
+    WHITE,
+};
+
+uint16 vga_entry(unsigned char ch, uint8 fg, uint8 bg);
+void clear_vga_buffer(uint16 **buffer, uint8 fg, uint8 bg);
+void init_vga(uint8 fg, uint8 bg);
+void charPtr(char ch);
+void strPtr(char *str);
+
 
 #endif

@@ -1,8 +1,6 @@
-#include <stdio.h>
-
 #include <kernel/tty.h>
 
 void kernel_main(void) {
-	terminal_initialize();
-	printf("Hello, kernel World!\n");
+	init_vga();
+	strPtr("Hello 123!\nTest 1 2 3\n4");
 }

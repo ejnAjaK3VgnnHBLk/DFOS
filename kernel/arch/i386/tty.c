@@ -1,54 +1,77 @@
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
+#include <tty.h>
+#include <regint.h>
 #include <string.h>
+#include <number.h>
 
-#include <kernel/tty.h>
+uint32 vga_index;
+static uint32 next_line_index = 1;
+uint8 g_fg = WHITE, g_bg = BLUE;
 
-#include "vga.h"
 
-static const size_t VGA_WIDTH = 80;
-static const size_t VGA_HEIGHT = 25;
-static uint16_t* const VGA_MEMORY = (uint16_t*) 0xC03FF000;
+uint16 vga_entry(unsigned char ch, uint8 fg, uint8 bg) {
+    uint16 ax = 0;
+    uint8 ah = 0, al = 0;
 
-static size_t terminal_row;
-static size_t terminal_column;
-static uint8_t terminal_color;
-static uint16_t* terminal_buffer;
+    ah = bg;
+    ah <<= 4;
+    ah |= fg;
+    ax = ah;
+    ax <<= 8;
+    al = ch;
+    ax |= al;
 
-void terminal_initialize(void) {
-	terminal_row = 0;
-	terminal_column = 0;
-	terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
-	terminal_buffer = VGA_MEMORY;
-	for (size_t y = 0; y < VGA_HEIGHT; y++) {
-		for (size_t x = 0; x < VGA_WIDTH; x++) {
-			const size_t index = y * VGA_WIDTH + x;
-			terminal_buffer[index] = vga_entry(' ', terminal_color);
+    return ax;
+};
+
+void clear_vga_buffer(uint16 **buffer, uint8 fg, uint8 bg) {
+    for (uint32 i = 0; i < BUFSIZE; i++) {
+        (*buffer)[i] = vga_entry(NULL, fg, bg);;
+    }
+    next_line_index = 1;
+    vga_index = 0;
+}
+
+// Start VGA buffer
+void init_vga(uint8 fg, uint8 bg) {
+    vga_buffer = (uint16*)VGA_ADDRESSES;
+    clear_vga_buffer(&vga_buffer, fg, bg);
+    g_fg = fg;
+    g_bg = bg;
+}
+
+// Increase vga_inde xby width of row(80)
+void newline() {
+    // Check if end of screen
+    if(next_line_index >= 55){
+        next_line_index = 0;
+        clear_vga_buffer(&vga_buffer, g_gf, g_bg);
+    }
+    vga_index = 80*next_line_index;
+    next_line_index++;
+}
+
+void charPtr(char ch) {
+    vga_buffer[vga_index] = vga_entry(ch, g_fg, g_bg);
+    vga_index++;
+}
+
+// We dont need to remove past here
+void strPtr(char *str) {
+	uint32_t index = 0;
+	while(str[index]) { 
+		// We use a while loop so that we don't have
+		// to use a funciton to find the length of the
+		// string in oder to use a for loop. 
+
+		// Check for various special characters
+		if (str[index] == '\n') {
+			newline();
+		} if (isNum(str[index]) == true) {
+			charPtr(charToInt(str[index]));
+		} else {
+			charPtr(str[index]);
 		}
+
+		index++;
 	}
 }
-
-void terminal_setcolor(uint8_t color) { terminal_color = color; }
-
-void terminal_putentryat(unsigned char c, uint8_t color, size_t x, size_t y) {
-	const size_t index = y * VGA_WIDTH + x;
-	terminal_buffer[index] = vga_entry(c, color);
-}
-
-void terminal_putchar(char c) {
-	unsigned char uc = c;
-	terminal_putentryat(uc, terminal_color, terminal_column, terminal_row);
-	if (++terminal_column == VGA_WIDTH) {
-		terminal_column = 0;
-		if (++terminal_row == VGA_HEIGHT)
-			terminal_row = 0;
-	}
-}
-
-void terminal_write(const char* data, size_t size) {
-	for (size_t i = 0; i < size; i++)
-		terminal_putchar(data[i]);
-}
-
-void terminal_writestring(const char* data) { terminal_write(data, strlen(data)); }
