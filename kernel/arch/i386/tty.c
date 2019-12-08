@@ -3,6 +3,10 @@
 #include <string.h>
 #include <number.h>
 
+int ascii_codes[] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
+
+uint16_t* vga_buffer;
+
 uint32_t vga_index;
 static uint32_t next_line_index = 1;
 uint8_t g_fg = WHITE, g_bg = BLUE;

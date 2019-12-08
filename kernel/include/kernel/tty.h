@@ -6,11 +6,6 @@
 #define VGA_ADDRESS (uint16_t*)0xC03FF000
 #define BUFSIZE 2200
 
-
-int ascii_codes = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
-
-uint16_t* vga_buffer;
-
 #define NULL 0
 
 enum vga_color {
