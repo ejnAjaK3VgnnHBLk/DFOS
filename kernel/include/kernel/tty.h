@@ -32,9 +32,9 @@ enum vga_color {
     WHITE,
 };
 
-uint16 vga_entry(unsigned char ch, uint8 fg, uint8 bg);
-void clear_vga_buffer(uint16 **buffer, uint8 fg, uint8 bg);
-void init_vga(uint8 fg, uint8 bg);
+uint16 vga_entry(unsigned char ch, uint8_t fg, uint8_t bg);
+void clear_vga_buffer(uint16 **buffer, uint8_t fg, uint8_t bg);
+void init_vga(uint8_t fg, uint8_t bg);
 void charPtr(char ch);
 void strPtr(char *str);
 
