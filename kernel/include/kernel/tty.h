@@ -3,7 +3,7 @@
 
 #include <regint.h>
 
-#define VGA_ADDRESS = (uint16_t*) 0xC03FF000
+#define VGA_ADDRESS (uint16_t*)0xC03FF000
 #define BUFSIZE 2200
 
 
