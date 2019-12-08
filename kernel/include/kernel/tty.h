@@ -9,7 +9,7 @@
 
 int ascii_codes = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
 
-uint16* vga_buffer;
+uint16_t* vga_buffer;
 
 #define NULL 0
 
@@ -32,8 +32,8 @@ enum vga_color {
     WHITE,
 };
 
-uint16 vga_entry(unsigned char ch, uint8_t fg, uint8_t bg);
-void clear_vga_buffer(uint16 **buffer, uint8_t fg, uint8_t bg);
+uint16_t vga_entry(unsigned char ch, uint8_t fg, uint8_t bg);
+void clear_vga_buffer(uint16_t **buffer, uint8_t fg, uint8_t bg);
 void init_vga(uint8_t fg, uint8_t bg);
 void charPtr(char ch);
 void strPtr(char *str);
