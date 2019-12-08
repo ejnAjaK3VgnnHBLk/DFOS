@@ -6,4 +6,4 @@
 int charToInt(char* ch);
 bool isNum(char* ch);
 
-#ifndef
+#endif

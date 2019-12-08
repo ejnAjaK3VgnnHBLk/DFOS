@@ -1,10 +1,10 @@
-#include <tty.h>
+#include <kernel/tty.h>
 #include <regint.h>
 #include <string.h>
 #include <number.h>
 
-uint32 vga_index;
-static uint32 next_line_index = 1;
+uint32_t vga_index;
+static uint32_t next_line_index = 1;
 uint8_t g_fg = WHITE, g_bg = BLUE;
 
 
@@ -24,7 +24,7 @@ uint16_t vga_entry(unsigned char ch, uint8_t fg, uint8_t bg) {
 };
 
 void clear_vga_buffer(uint16_t **buffer, uint8_t fg, uint8_t bg) {
-    for (uint32 i = 0; i < BUFSIZE; i++) {
+    for (uint32_t i = 0; i < BUFSIZE; i++) {
         (*buffer)[i] = vga_entry(NULL, fg, bg);;
     }
     next_line_index = 1;
@@ -33,7 +33,7 @@ void clear_vga_buffer(uint16_t **buffer, uint8_t fg, uint8_t bg) {
 
 // Start VGA buffer
 void init_vga(uint8_t fg, uint8_t bg) {
-    vga_buffer = (uint16_t*)VGA_ADDRESSES;
+    vga_buffer = (uint16_t*)VGA_ADDRESS;
     clear_vga_buffer(&vga_buffer, fg, bg);
     g_fg = fg;
     g_bg = bg;
@@ -44,7 +44,7 @@ void newline() {
     // Check if end of screen
     if(next_line_index >= 55){
         next_line_index = 0;
-        clear_vga_buffer(&vga_buffer, g_gf, g_bg);
+        clear_vga_buffer(&vga_buffer, g_fg, g_bg);
     }
     vga_index = 80*next_line_index;
     next_line_index++;
